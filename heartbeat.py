@@ -26,27 +26,24 @@ def corning_status(*args, **kwargs):
         server_address = ("192.168.1.80", 4460)
         command = '<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><command><sensor>2_HSI</sensor><type>status</type></command>'
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #print("connecting.....")
         connected = False
         while not connected:
-            try:
-                s.connect(server_address)
-                connected = True
-            except Exception as e:
-                pass #Do nothing, just try again
-        
-        
-        s.connect(server_address)
-        #print("connected")
-        s.sendto(bytes(command, "ISO-8859-1"), server_address)
-        resp, addr = s.recvfrom(4460)
-        #print("message received")
-        #print(resp.decode("ISO-8859-1"))
+              try:
+                  print("trying to connect")
+                  s.connect(server_address)
+                  s.sendto(bytes(command,"ISO-8859-1"), server_address)
+                  resp, addr = s.recvfrom(4460)
+                  connected = True
+                  print("successfully connected")
+              except:
+                  print("waiting")
+
+        print("connected")
+        print("message received")                                                                                               #print(resp.decode("ISO-8859-1"))
         root = ET.fromstring(resp)
         status = root[3].text
-        #print(status)
-        #time.sleep(2)
-        #print("done sleeping")
+        print(status)
+        
         return status
 
 
